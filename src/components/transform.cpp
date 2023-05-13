@@ -1,4 +1,6 @@
 #include "glm/fwd.hpp"
+#include "sandbox/core/component.h"
+#include "sandbox/core/entity.h"
 #include <glm/glm.hpp>
 
 #include <sandbox/components/transform.h>
@@ -6,8 +8,6 @@
 
 
 
-
-Sandbox::Transform::Transform() { }
 
 Sandbox::Transform::~Transform() { }
 

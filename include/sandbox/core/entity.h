@@ -2,11 +2,15 @@
 
 
 #include "sandbox/decl.h"
-#include <bits/stdint-intn.h>
+#include <memory>
+
+
+
 namespace Sandbox {
     class Entity {
     private:
         uuid_t UUID;
+        bool m_Active = true;
 
     public:
         Entity();
@@ -14,5 +18,6 @@ namespace Sandbox {
 
 
         uuid_t getUUID();
+        bool IsActive();
     };
 };

@@ -23,3 +23,7 @@ Sandbox::Entity::~Entity() {}
 uuid_t Sandbox::Entity::getUUID() {
     return this->UUID;
 }
+
+bool Sandbox::Entity::IsActive() {
+    return this->m_Active;
+}

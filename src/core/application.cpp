@@ -1,6 +1,10 @@
 #include <glad/glad.h>
 #include "GLFW/glfw3.h"
+#include "sandbox/components/cmesh.h"
+#include "sandbox/components/transform.h"
+#include "sandbox/core/registry.h"
 #include "sandbox/core/shader.h"
+#include "sandbox/core/renderer.h"
 
 #include <cstdlib>
 #include <iostream>
@@ -38,8 +42,7 @@ void Sandbox::Application::Init() {
     }
 
     glViewport(0, 0, WIDTH, HEIGHT);
-
-    glPointSize(4);
+    glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
 }
 
 float vertices[] = {
@@ -55,19 +58,17 @@ unsigned int VAO;
 #define LEN(x) (sizeof(x)/sizeof(x[0]))
 
 void Sandbox::Application::Run() {
-    Sandbox::Shader *shades = new Sandbox::Shader("/home/jae/Projects/cpp/sandbox/res/vertex.glsl", "/home/jae/Projects/cpp/sandbox/res/fragment.glsl");
+    Sandbox::Shader *shades = new Sandbox::Shader("/home/jae/Projects/cpp/sandbox/res/pixel_shader.glsl", 
+                                                  "/home/jae/Projects/cpp/sandbox/res/fragment.glsl");
 
 
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
+    auto entt = Registry::RegisterNewEntity();
+    auto tran = Registry::RegisterComponent<Transform>(entt->getUUID());
+    auto cmesh = Registry::RegisterComponent<CMesh>(entt->getUUID());
+    cmesh->SetVerticies(vertices, 4);
+    cmesh->BuildMesh();
 
-    glBindVertexArray(VAO);
-
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*) 0);
-    glEnableVertexAttribArray(0);
+    std::cout << entt->IsActive();
 
     while(!glfwWindowShouldClose(m_Window)) {
 
@@ -76,10 +77,7 @@ void Sandbox::Application::Run() {
         glClearColor(0.2f, 0.1f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        shades->Use();
-        glBindVertexArray(VAO);
-        glDrawArrays(GL_POINTS, 0, LEN(vertices)/2);
-        glBindVertexArray(0);
+        Sandbox::Renderer::render(shades);
 
         glfwSwapBuffers(m_Window);
         glfwPollEvents();
