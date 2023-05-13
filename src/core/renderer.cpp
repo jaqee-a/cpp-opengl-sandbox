@@ -1,14 +1,17 @@
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+
+#include "glm/fwd.hpp"
 #include "sandbox/core/renderer.h"
 #include "sandbox/components/cmesh.h"
 #include "sandbox/components/transform.h"
+#include "sandbox/core/application.h"
 #include "sandbox/core/component.h"
 #include "sandbox/core/registry.h"
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
 #include "sandbox/core/shader.h"
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
 #include <memory>
 
 
@@ -31,7 +34,8 @@ void Sandbox::Renderer::render(Sandbox::Shader *shader) {
         cmesh     = (Sandbox::CMesh*)components[Sandbox::CMesh::CLASS].get();
 
         model = glm::mat4(1.0);
-        model = glm::translate(model, glm::vec3(transform->GetPosition().x, transform->GetPosition().y, 0));
+        model = glm::translate(model, glm::vec3(( transform->GetPosition().x / Application::WIDTH ) * 2 - 1,
+                                                (-transform->GetPosition().y / Application::HEIGHT) * 2 + 1, 0));
         shader->setMat4("model", glm::value_ptr(model));
 
         glBindVertexArray(cmesh->GetVAO());

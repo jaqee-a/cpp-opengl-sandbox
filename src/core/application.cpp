@@ -23,6 +23,10 @@ void Sandbox::Application::mouse_callback(GLFWwindow *window, double xpos, doubl
     MouseCallback(xpos, ypos);
 }
 
+void Sandbox::Application::mouse_button_callback(GLFWwindow *window, int32_t button, int32_t action, int32_t mods) { 
+    MouseButtonCallback(button, action, mods);
+}
+
 void Sandbox::Application::Init(void (*init)(), void (*update)()) {
     if(!glfwInit()) {
         std::cerr << "Could not initialize GLFW!";
@@ -44,6 +48,7 @@ void Sandbox::Application::Init(void (*init)(), void (*update)()) {
     glfwMakeContextCurrent(m_Window);
     glfwSetFramebufferSizeCallback(m_Window, framebuffer_size_callback);
     glfwSetCursorPosCallback(m_Window, mouse_callback);
+    glfwSetMouseButtonCallback(m_Window, mouse_button_callback);
 
 
     if(!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {

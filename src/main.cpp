@@ -1,3 +1,4 @@
+#include <cstdlib>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
@@ -37,13 +38,35 @@ void update() {
 
 void onMouseMove(double xpos, double ypos) {
     auto tran = Sandbox::Registry::GetComponent<Sandbox::Transform>(entt->getUUID());
-    tran->SetPosition(xpos / Sandbox::Application::WIDTH * 2 - 1, (-ypos / Sandbox::Application::HEIGHT) * 2 + 1);
+
+    tran->SetPosition(xpos, ypos);
+}
+
+
+void onMousePress(int32_t button, int32_t action, int32_t mods) {
+    if ( button == GLFW_MOUSE_BUTTON_LEFT && action == 1) {
+        
+        auto entt  = Sandbox::Registry::RegisterNewEntity().get();
+        cmesh = Sandbox::Registry::RegisterComponent<Sandbox::CMesh>(entt->getUUID()).get();
+
+        cmesh->SetVerticies(vertices, 4);
+        cmesh->BuildMesh();
+
+
+
+        auto tran = Sandbox::Registry::GetComponent<Sandbox::Transform>(entt->getUUID());
+
+        tran->SetPosition(std::rand() % Sandbox::Application::WIDTH, std::rand() % Sandbox::Application::HEIGHT);
+
+
+    }
 }
 
 
 int main(void) {
 
     Sandbox::Application::MouseCallback = onMouseMove;
+    Sandbox::Application::MouseButtonCallback = onMousePress;
 
     Sandbox::Application::Init(&init, &update);
     Sandbox::Application::Run();
