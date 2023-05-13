@@ -19,16 +19,16 @@ namespace Sandbox {
         std::vector<float_t> m_Colors;
         
     public:
-        const static _CLASS_ID CLASS = CMESH;
+        const static _CLASS_ID CLASS;
 
         CMesh(std::shared_ptr<Sandbox::Entity> entt) : Sandbox::Component(entt) {};
         ~CMesh();
 
         void BuildMesh();
-        void SetVerticies(float_t* vertices, size_t len);
+        void SetVerticies(const float_t* vertices, const size_t len);
         std::vector<float_t> GetVertices();
         uint32_t GetVAO();
     };
+    
+    inline const _CLASS_ID CMesh::CLASS = ++Component::__ID;
 };
-
-inline const _CLASS_ID Sandbox::CMesh::CLASS;

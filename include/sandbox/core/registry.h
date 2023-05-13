@@ -17,6 +17,8 @@ namespace Sandbox {
     
     namespace Registry
     {
+        template<class T>
+        concept Component = std::is_base_of_v<Sandbox::Component, T>;
 
         inline std::map<uuid_t, std::shared_ptr<Sandbox::Entity>> enttTable;
 
@@ -24,10 +26,14 @@ namespace Sandbox {
                     std::map<_CLASS_ID,
                         std::shared_ptr<Sandbox::Component>>> componentsTable;
 
+        inline  std::map<uuid_t, 
+                    std::map<_CLASS_ID,
+                        std::shared_ptr<Sandbox::Component>>> comps;
+
         std::shared_ptr<Sandbox::Entity> RegisterNewEntity();
         std::shared_ptr<Sandbox::Entity> getEntityByUUID(uuid_t uuid); 
         
-        template <typename T>
+        template <Component T>
         std::vector<std::shared_ptr<Sandbox::Entity>> GetAllOfType() {
             std::vector<std::shared_ptr<Sandbox::Entity>> out;
 
@@ -39,7 +45,7 @@ namespace Sandbox {
             return out;
         }
 
-        template <typename T>
+        template <Component T>
         std::shared_ptr<T> GetComponent(uuid_t uuid) {
             auto __comp = componentsTable[uuid];
 
@@ -52,7 +58,7 @@ namespace Sandbox {
             return nullptr;
         }
 
-        template <typename T>
+        template <Component T>
         std::shared_ptr<T> RegisterComponent(uuid_t uuid) {
             std::shared_ptr<T> component (new T(enttTable[uuid]));
             componentsTable[uuid][component->CLASS] = component;

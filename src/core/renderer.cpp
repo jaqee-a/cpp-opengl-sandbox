@@ -27,8 +27,8 @@ void Sandbox::Renderer::render(Sandbox::Shader *shader) {
         
         components = Registry::componentsTable[entt->getUUID()];
 
-        transform = (Sandbox::Transform*)components[_CLASS_ID::TRANSFORM].get();
-        cmesh     = (Sandbox::CMesh*)components[_CLASS_ID::CMESH].get();
+        transform = (Sandbox::Transform*)components[Sandbox::Transform::CLASS].get();
+        cmesh     = (Sandbox::CMesh*)components[Sandbox::CMesh::CLASS].get();
 
         model = glm::mat4(1.0);
         model = glm::translate(model, glm::vec3(transform->GetPosition().x, transform->GetPosition().y, 0));

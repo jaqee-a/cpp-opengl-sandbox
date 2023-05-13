@@ -1,3 +1,5 @@
+set -xe
+
 build() {
     /usr/bin/cmake --no-warn-unused-cli \
         -DCMAKE_BUILD_TYPE:STRING=Debug \
@@ -23,7 +25,7 @@ fi
 
 for arg in "$@"; do
     if echo ${av_args[@]} | grep -q -w $arg; then
-        $arg
+        $arg 
     else
         echo -e "COMMAND NOT FOUND: $arg";
         echo -e "Available commands: \n\t- $(echo ${av_args[@]} | sed -e 's/ /\n\t\- /g')"

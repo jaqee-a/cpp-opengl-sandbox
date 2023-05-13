@@ -9,12 +9,12 @@
 
 namespace Sandbox {
 
-    class Transform: public Component {
+    class Transform : public Component {
     private:
         glm::vec2 m_Position = {0, 0};
 
     public:
-        const static _CLASS_ID CLASS = TRANSFORM;
+        const static _CLASS_ID CLASS;
 
         Transform(std::shared_ptr<Sandbox::Entity> entt) : Component(entt) {};
         ~Transform();
@@ -24,6 +24,5 @@ namespace Sandbox {
         const glm::vec2& GetPosition();
     };
     
+    inline const _CLASS_ID Transform::CLASS = ++Component::__ID;
 };
-
-inline const _CLASS_ID Sandbox::Transform::CLASS;

@@ -1,3 +1,4 @@
+#include <cstdint>
 #include <glad/glad.h>
 #include "GLFW/glfw3.h"
 #include "sandbox/components/cmesh.h"
@@ -5,17 +6,24 @@
 #include "sandbox/core/registry.h"
 #include "sandbox/core/shader.h"
 #include "sandbox/core/renderer.h"
+#include "sandbox/decl.h"
 
 #include <cstdlib>
 #include <iostream>
 
 #include <sandbox/core/application.h>
 
-void Sandbox::Application::framebuffer_size_callback(GLFWwindow *window, size_t width, size_t height) {
+void Sandbox::Application::framebuffer_size_callback(GLFWwindow *window, int32_t width, int32_t height) {
+    Sandbox::Application::WIDTH  = width;
+    Sandbox::Application::HEIGHT = height;
     glViewport(0, 0, width, height);
 }
 
-void Sandbox::Application::Init() {
+void Sandbox::Application::mouse_callback(GLFWwindow *window, double xpos, double ypos) {
+    MouseCallback(xpos, ypos);
+}
+
+void Sandbox::Application::Init(void (*init)(), void (*update)()) {
     if(!glfwInit()) {
         std::cerr << "Could not initialize GLFW!";
         exit(-1);
@@ -34,6 +42,8 @@ void Sandbox::Application::Init() {
     }
 
     glfwMakeContextCurrent(m_Window);
+    glfwSetFramebufferSizeCallback(m_Window, framebuffer_size_callback);
+    glfwSetCursorPosCallback(m_Window, mouse_callback);
 
 
     if(!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
@@ -43,32 +53,16 @@ void Sandbox::Application::Init() {
 
     glViewport(0, 0, WIDTH, HEIGHT);
     glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
+
+    initFunction = init;
+    updateFunction = update;
 }
-
-float vertices[] = {
-     (float) 0 / Sandbox::Application::WIDTH, (float) 0 / Sandbox::Application::HEIGHT,  // top right
-     (float) 4 / Sandbox::Application::WIDTH, (float) 0 / Sandbox::Application::HEIGHT// bottom right
-};
-
-
  
-unsigned int VBO;
-unsigned int VAO;
-
-#define LEN(x) (sizeof(x)/sizeof(x[0]))
-
 void Sandbox::Application::Run() {
     Sandbox::Shader *shades = new Sandbox::Shader("/home/jae/Projects/cpp/sandbox/res/pixel_shader.glsl", 
                                                   "/home/jae/Projects/cpp/sandbox/res/fragment.glsl");
 
-
-    auto entt = Registry::RegisterNewEntity();
-    auto tran = Registry::RegisterComponent<Transform>(entt->getUUID());
-    auto cmesh = Registry::RegisterComponent<CMesh>(entt->getUUID());
-    cmesh->SetVerticies(vertices, 4);
-    cmesh->BuildMesh();
-
-    std::cout << entt->IsActive();
+    initFunction();
 
     while(!glfwWindowShouldClose(m_Window)) {
 
@@ -77,6 +71,7 @@ void Sandbox::Application::Run() {
         glClearColor(0.2f, 0.1f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
+        updateFunction();
         Sandbox::Renderer::render(shades);
 
         glfwSwapBuffers(m_Window);

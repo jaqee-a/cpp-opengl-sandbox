@@ -39,7 +39,7 @@ std::vector<float_t> Sandbox::CMesh::GetVertices() {
     return this->m_Vertices;
 }
 
-void Sandbox::CMesh::SetVerticies(float_t *vertices, size_t len) {
+void Sandbox::CMesh::SetVerticies(const float_t *vertices, const size_t len) {
     this->m_Vertices.insert(this->m_Vertices.end(), vertices, vertices + len);
 }
 

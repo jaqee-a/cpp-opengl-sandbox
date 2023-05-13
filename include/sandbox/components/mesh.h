@@ -14,11 +14,11 @@ namespace Sandbox {
         int32_t m_EBO;
         
     public:
-        const static _CLASS_ID CLASS = MESH;
+        const static _CLASS_ID CLASS;
 
         Mesh(std::shared_ptr<Sandbox::Entity> entt) : Sandbox::Component(entt) {};
         ~Mesh();
     };
+    
+    inline const _CLASS_ID Mesh::CLASS = ++Component::__ID;
 };
-
-inline const _CLASS_ID Sandbox::Mesh::CLASS;
