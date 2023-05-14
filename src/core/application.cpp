@@ -1,3 +1,4 @@
+#include <cmath>
 #include <cstdint>
 #include <glad/glad.h>
 #include "GLFW/glfw3.h"
@@ -5,6 +6,7 @@
 #include "sandbox/components/transform.h"
 #include "sandbox/core/registry.h"
 #include "sandbox/core/shader.h"
+#include "sandbox/core/time.h"
 #include "sandbox/core/renderer.h"
 #include "sandbox/decl.h"
 
@@ -69,7 +71,14 @@ void Sandbox::Application::Run() {
 
     initFunction();
 
+    float_t lastFrame = 0.0f;
+    float_t currentFrame = 0.0f;
+
     while(!glfwWindowShouldClose(m_Window)) {
+
+        currentFrame = glfwGetTime();
+        Sandbox::Time::DELTA_TIME = currentFrame - lastFrame;
+        lastFrame = currentFrame;
 
         Sandbox::Application::ProcessInput();
 

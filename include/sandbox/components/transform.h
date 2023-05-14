@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cmath>
 #include <memory>
 
 #include "sandbox/core/entity.h"
@@ -20,8 +21,9 @@ namespace Sandbox {
         ~Transform();
 
 
-        void SetPosition(float x, float y); 
-        const glm::vec2& GetPosition();
+        void SetPosition(float_t x, float_t y); 
+        void AddPosition(float_t x, float_t y);
+        glm::vec2& GetPosition();
     };
     
     inline const _CLASS_ID Transform::CLASS = ++Component::__ID;

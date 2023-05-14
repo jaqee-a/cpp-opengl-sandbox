@@ -20,8 +20,8 @@ namespace Sandbox {
 
         virtual ~Component();
 
-
         std::shared_ptr<Sandbox::Entity> GetEntity(); 
+
     };
     
     inline size_t Component::__ID = 0;

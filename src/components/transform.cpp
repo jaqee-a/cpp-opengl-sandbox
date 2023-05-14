@@ -18,8 +18,12 @@ void Sandbox::Transform::SetPosition(float x, float y) {
     this->m_Position.y = y;
 }
 
+void Sandbox::Transform::AddPosition(float_t x, float_t y) {
+    this->m_Position.x += x;
+    this->m_Position.y += y;
+}
 
-const glm::vec2& Sandbox::Transform::GetPosition() {
+glm::vec2& Sandbox::Transform::GetPosition() {
     return this->m_Position;
 }
 

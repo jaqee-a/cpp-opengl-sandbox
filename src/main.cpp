@@ -6,12 +6,15 @@
 #include "glm/fwd.hpp"
 #include "sandbox/components/transform.h"
 #include "sandbox/components/mesh.h"
+#include "sandbox/components/rigidbody.h"
 #include "sandbox/core/application.h"
 #include "sandbox/core/component.h"
 #include "sandbox/core/entity.h"
 #include "sandbox/core/registry.h"
 #include "sandbox/utils/uuid.h"
 #include "sandbox/components/cmesh.h"
+
+#include "scripts/element.h"
 
 float vertices[] = {
      (float) 0 / Sandbox::Application::WIDTH, (float) 0 / Sandbox::Application::HEIGHT,  // top right
@@ -33,6 +36,14 @@ void init() {
 }
 
 void update() {
+    auto entts = Sandbox::Registry::GetAllOfType<Sandbox::Rigidbody>();
+
+    Sandbox::Rigidbody *rigid;
+
+    for(auto entt : entts) {
+        rigid = Sandbox::Registry::GetComponent<Sandbox::Rigidbody>(entt->getUUID()).get();
+        rigid->update();
+    }
 
 }
 
@@ -48,17 +59,13 @@ void onMousePress(int32_t button, int32_t action, int32_t mods) {
         
         auto entt  = Sandbox::Registry::RegisterNewEntity().get();
         cmesh = Sandbox::Registry::RegisterComponent<Sandbox::CMesh>(entt->getUUID()).get();
+        // Sandbox::Registry::RegisterComponent<Sandbox::Rigidbody>(entt->getUUID()).get();
 
         cmesh->SetVerticies(vertices, 4);
         cmesh->BuildMesh();
 
-
-
         auto tran = Sandbox::Registry::GetComponent<Sandbox::Transform>(entt->getUUID());
-
         tran->SetPosition(std::rand() % Sandbox::Application::WIDTH, std::rand() % Sandbox::Application::HEIGHT);
-
-
     }
 }
 
